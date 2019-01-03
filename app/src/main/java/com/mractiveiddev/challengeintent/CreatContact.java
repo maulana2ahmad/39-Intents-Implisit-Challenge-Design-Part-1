@@ -1,13 +1,14 @@
 package com.mractiveiddev.challengeintent;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
-public class CreatContact extends AppCompatActivity {
+public class CreatContact extends AppCompatActivity implements View.OnClickListener{
 
     EditText etName, etNumber, etLocation, etWebsite;
     ImageView ivHappy, ivNetral, ivSad;
@@ -26,25 +27,44 @@ public class CreatContact extends AppCompatActivity {
         ivNetral = findViewById(R.id.ivNetral);
         ivSad = findViewById(R.id.ivSad);
 
-        ivHappy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent()
+        ivHappy.setOnClickListener(this);
+        ivNetral.setOnClickListener(this);
+        ivSad.setOnClickListener(this);
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (etName.getText().toString().isEmpty() ||
+                etNumber.getText().toString().isEmpty() ||
+                etLocation.getText().toString().isEmpty() ||
+                etWebsite.getText().toString().isEmpty())
+        {
+            Toast.makeText(this, "Fleas enter all Field", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Intent intent = new Intent();
+            intent.putExtra("name", etName.getText().toString().trim());
+            intent.putExtra("number", etNumber.getText().toString().trim());
+            intent.putExtra("location", etLocation.getText().toString().trim());
+            intent.putExtra("website", etWebsite.getText().toString().trim());
+
+            if (view.getId() == R.id.ivHappy)
+            {
+                intent.putExtra("mood", "happy");
             }
-        });
-
-        ivNetral.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
+            else if (view.getId() == R.id.ivNetral)
+            {
+                intent.putExtra("mood", "netral");
             }
-        });
-
-        ivSad.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
+            else
+            {
+                intent.putExtra("mood", "sad");
             }
-        });
+
+            setResult(RESULT_OK, intent);
+            CreatContact.this.finish();
+        }
     }
 }
